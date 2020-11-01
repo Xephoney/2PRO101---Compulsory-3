@@ -24,6 +24,7 @@
     <ProjectGuid>{c8d9c7cd-99ec-4374-a311-d33dde75c1cb}</ProjectGuid>
     <RootNamespace>My2PRO101Compulsary3</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>2PRO101 - Compulsory 3</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -139,10 +140,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="2PRO101 - Compulsary 3.cpp" />
+    <ClCompile Include="2PRO101 - Compulsory 3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Compulsory 3.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="save.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
