@@ -1,19 +1,16 @@
-#include <iostream>
-#include <fstream>
-#include <conio.h>
-#include <string>
 #include <time.h>
-//This includes a Login Struct that takes care of the login functions
 #include "Compulsory 3.h"
 
 
+Login login;
 
 
 int main()
 {
     srand(time(NULL));
-    //Task1();
-    Play();
+    Task1();
+    //Play();
+    //TestFunction();
 }
 
 void Task1()
@@ -22,7 +19,8 @@ void Task1()
     //The login struct is at line 16 in the header
     if (login.PasswordCheck())
     {
-        std::cout << "Correct Password\n\n";
+		system("cls");
+		std::cout << "Correct Password! \n\n";
         MainMenu();
     }
     else
@@ -56,6 +54,7 @@ void MainMenu()
         case 3 : 
             std::cout << "Exiting Application. Good Bye! \n\n\n";
             return;
+            break;
         default:
             std::cin.clear();
             std::cin.ignore(8000, '\n');
@@ -67,114 +66,60 @@ void MainMenu()
 
 }
 
-struct BattleShip
-{
-    char board[M][N];
-    char playerBoard[M][N];
-    int numberOfHits;
-    int numberOfShots;
-    void makeEmptyBoard()
-    {
-        for (int y = 0; y < M; y++)
-        {
-            for (int x = 0; x < N; x++)
-            {
-                board[x][y] = BLANK;
-            }
-        }
-
-        for (int y = 0; y < M; y++)
-        {
-            for (int x = 0; x < N; x++)
-            {
-                playerBoard[x][y] = BLANK;
-            }
-        }
-        
-
-        /*
-        int** Board;
-        Board = new int*[M];
-        for (int i = 0; i < M; i++)
-        {
-            Board[i] = new int[N];
-        }
-        */
-    }
-    void makeBoard(int numberOfShips)
-    {
-        int x;
-        int y;
-        for (int i = 0; i < numberOfShips; i++)
-        {
-        Retry:
-            y = randomRow();
-            x = randomColumn();
-            if (board[x][y] == SHIP)
-            {
-                goto Retry;
-            }
-            board[x][y] = SHIP;
-        }
-    }
-
-    void printBoard()
-    {
-        system("CLS");
-        for (int y = 0; y < M; y++)
-        {
-            std::cout << y + 1 << " ";
-            for (int x = 0; x < N; x++)
-            {
-                std::cout << "|" << board[x][y];
-            }
-            std::cout << "|\n";
-        }
-        writeLetters();
-    }
-    void printPlayerBoard()
-    {
-        system("CLS");
-        
-        for (int y = 0; y < M; y++)
-        {
-            std::cout << y + 1 << " ";
-            for (int x = 0; x < N; x++)
-            {
-                std::cout << "|" << playerBoard[x][y];
-            }
-            std::cout << "|\n";
-        }
-        writeLetters();
-    }
-    void writeLetters()
-    {
-        std::cout << "  -------------\n";
-        std::cout << "  ";
-
-        for (int i = 0; i < N; i++)
-        {
-            std::cout << "|" << (char)(65 + i) ;
-        }
-        std::cout << "|\n";
-    }
-    void Shoot()
-    {
-
-    }
-
-};
-
 void Play()
 {
-    //Single Player
-    BattleShip game;
+    Battleship game;
+    //Single Player (Single Boats
     game.makeEmptyBoard();
     game.makeBoard(11);
-    //game.printBoard();
+    game.printBoard();
+    game.numberOfShots = 25;
     game.printPlayerBoard();
 
-    
+    do 
+    {
+		if (game.numberOfShots == 0)
+		{
+            std::cout << "We ran out of ammo! \n Lets retreat! \n\n GAME OVER\n";
+			system("pause");
+            system("CLS");
+			MainMenu();
+		}
+        game.Shoot();
+        game.printPlayerBoard();
+        std::cout << game.numberOfShots;
+    } while (game.remainingShips > 0);
+
+    std::cout << "The location of the enemy ships! \n";
+    game.printBoard();
+    std::cout << "We got 'em Captain! We win! \n";
+
+    system("pause");
+    system("CLS");
+    MainMenu();
 }
 
+void Player_VS_CPU()
+{
+    Battleship game;
+    game.makeEmptyBoard();
+    game.MakeBoardThree(game.board,4);
+    game.MakeBoardThree(game.playerBoard, 4);
 
+    game.printBoard();
+    std::cout << "\n\n";
+    game.printPlayerBoard();
+}
+
+int letterToNumber(char letter)
+{
+	return static_cast<int>(letter) - 65;
+}
+int randomRow()
+{
+	return rand() % M;
+}
+int randomColumn()
+{
+	return rand() % N;
+}

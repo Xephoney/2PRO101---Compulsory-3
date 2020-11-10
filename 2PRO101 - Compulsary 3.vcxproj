@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2PRO101 - Compulsory 3.cpp" />
+    <ClCompile Include="Battleship.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Compulsory 3.h" />

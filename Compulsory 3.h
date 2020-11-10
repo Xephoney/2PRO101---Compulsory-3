@@ -1,5 +1,8 @@
 #pragma once
-
+#include <iostream>
+#include <fstream>
+#include <conio.h>
+#include <string>
 
 //Variables and Definitions
 #define Password_Grid_Colum_Size 4
@@ -11,6 +14,10 @@ const char BLANK = ' ';
 const char SHIP = 'S';
 const char MISS = 'M';
 const char HIT = 'H';
+
+int letterToNumber(char letter);
+int randomRow();
+int randomColumn();
 
 struct Login {
 private:
@@ -65,7 +72,6 @@ public:
         //THIS IS FOR BUGTESTING - IGNORE - 
         //std::cout << "   Input\t |" << _pwInput << std::endl;
         //std::cout << "Password\t |"<< _pw << "|" << std::endl;
-
     }
     bool PasswordCheck()
     {
@@ -87,28 +93,28 @@ public:
             switch (inputKey)
             {
             case 'w':
-                if (!(y - 1 >= 0))
+                if (!(y - 1 >= 0) || passwordGrid[x][y - 1] == inputLocationChar)
                 {
                     continue;
                 }
                 y--;
                 break;
             case 'a':
-                if (!(x - 1 >= 0))
+                if (!(x - 1 >= 0) || passwordGrid[x - 1][y] == inputLocationChar)
                 {
                     continue;
                 }
                 x--;
                 break;
             case 'd':
-                if (!(x + 1 < Password_Grid_Colum_Size))
+                if (!(x + 1 < Password_Grid_Colum_Size) || passwordGrid[x + 1][y] == inputLocationChar)
                 {
                     continue;
                 }
                 x++;
                 break;
             case 's':
-                if (!(y + 1 < Password_Grid_Row_Size))
+                if (!(y + 1 < Password_Grid_Row_Size) || passwordGrid[x][y + 1] == inputLocationChar)
                 {
                     continue;
                 }
@@ -132,10 +138,9 @@ public:
         else
             return false;
     }
-
-
     void ChangePassword()
     {
+        SetupPasswordGrid();
         char previousLocationChar = 'A';
         char inputLocationChar = '*';
 
@@ -145,6 +150,7 @@ public:
         _pwInput.push_back(previousLocationChar);
 
         DisplayGrid();
+        std::cout << "The password can be a max length of 10 and a minimum of 4.\n You can also press G to save the selected. \n";
 
         do
         {
@@ -154,35 +160,44 @@ public:
             switch (inputKey)
             {
             case 'w':
-                if (!(y - 1 >= 0))
+                if (!(y - 1 >= 0) || passwordGrid[x][y-1] == inputLocationChar)
                 {
                     continue;
                 }
                 y--;
                 break;
             case 'a':
-                if (!(x - 1 >= 0))
+                if (!(x - 1 >= 0) || passwordGrid[x-1][y] == inputLocationChar)
                 {
                     continue;
                 }
                 x--;
                 break;
             case 'd':
-                if (!(x + 1 < Password_Grid_Colum_Size))
+                if (!(x + 1 < Password_Grid_Colum_Size) || passwordGrid[x+1][y] == inputLocationChar)
                 {
                     continue;
                 }
                 x++;
                 break;
             case 's':
-                if (!(y + 1 < Password_Grid_Row_Size))
+                if (!(y + 1 < Password_Grid_Row_Size) || passwordGrid[x][y+1] == inputLocationChar)
                 {
                     continue;
                 }
                 y++;
                 break;
             case 'g':
-                //Confirm New Password
+                if (_pwInput.length() >= 4)
+                {
+                    StorePassword(_pwInput);
+                    return;
+                }
+                else
+                {
+                    std::cout << "Your password is not long enough! \n";
+                    continue;
+                }
                 break;
             default:
                 continue;
@@ -194,10 +209,10 @@ public:
             _pwInput.push_back(previousLocationChar);
 
             DisplayGrid();
+            std::cout << "The password can be a max length of 10 and a minimum of 4.\n You can also press G to save the selected. \n";
+        } while (_pwInput.length() < 10);
 
-        } while (true);
-
-
+        StorePassword(_pwInput);
     }
     void Setup()
     {
@@ -211,28 +226,34 @@ public:
             _pw = "ABCDHLPONM";
         }
     }
-}login;
-
-
+};
 
 void Task1();
 void MainMenu(); // Task 2
-
 void Play(); //Battleships
-
-
-//Helper Functions
-int letterToNumber(char letter)
+void TestFunction();
+class Battleship
 {
-    return static_cast<int>(letter) - 65;
-}
-int randomRow()
-{
-    return rand() % M;
-}
-int randomColumn()
-{
-    return rand() % N;
-}
+    int numberOfHits;
+    int CPUhits;
 
+public:
+	char board[M][N];
+	char playerBoard[M][N];
+	char computerBoard[M][N];
 
+    int numberOfShots;
+    int remainingShips;
+
+    void makeEmptyBoard();
+    void makeBoard(int numberOfShips);
+    void printBoard();
+    void printPlayerBoard();
+    //0
+    void printGameBoard();
+    void writeLetters();
+    void Shoot();
+    void MakeBoardThree(char boardarr[][N], int numberOfShips);
+    bool AttemptToPlaceShip(char boardarr[][N], int Column, int Row, int direction);
+
+};
