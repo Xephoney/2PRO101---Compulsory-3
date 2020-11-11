@@ -236,14 +236,25 @@ class Battleship
 {
     int numberOfHits;
     int CPUhits;
-
+    
 public:
 	char board[M][N];
+    //The PlayerBoard is the board where the player see where they hit and missed and choose where the way to shoot next
 	char playerBoard[M][N];
+    //The PlayerShipBoard is the board holding the position of all the players ships. This is what the AI will aim at.
+    //This is where you can see where the AI has been firing.
+
+    char playerShipBoard[M][N];
+
+    //This is the AI's board. this stores the location of the computers ships.
 	char computerBoard[M][N];
 
     int numberOfShots;
+    int computerNumberOfShots;
+
     int remainingShips;
+    int computerRemainingShips;
+
 
     void makeEmptyBoard();
     void makeBoard(int numberOfShips);
@@ -253,7 +264,8 @@ public:
     void printGameBoard();
     void writeLetters();
     void Shoot();
-    void MakeBoardThree(char boardarr[][N], int numberOfShips);
+    void AIShoot();
+    void MakeBoardThree(int numberOfShips);
     bool AttemptToPlaceShip(char boardarr[][N], int Column, int Row, int direction);
 
 };

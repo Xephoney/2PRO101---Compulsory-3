@@ -11,6 +11,7 @@ int main()
     Task1();
     //Play();
     //TestFunction();
+    //MainMenu();
 }
 
 void Task1()
@@ -36,22 +37,18 @@ void MainMenu()
         std::cout << " --- [ Main Menu ] --- \n";
         std::cout << " 1. Change Password \n";
         std::cout << " 2. Play Battleship \n";
-        std::cout << " 3. Quit Application \n";
-        std::cout << "Please select one of the options above : ";
-        
-        int answer;
+        std::cout << " 3. Quit Application \n";                
     RETRY:
-        std::cin >> answer;
-
-        switch (answer)
+        //Since _getch here returns the ascii for that keyboard value, i've just made it check for those numbers; 49 = 1 on the keyboard etc.
+        switch (_getch())
         {
-        case 1 : 
+        case 49 : 
             login.ChangePassword();
             break;
-        case 2 :
+        case 50 :
             Play();
             break;
-        case 3 : 
+        case 51 : 
             std::cout << "Exiting Application. Good Bye! \n\n\n";
             return;
             break;
@@ -63,7 +60,6 @@ void MainMenu()
             break;
         }
     } while (true);
-
 }
 
 void Play()
@@ -103,14 +99,13 @@ void Player_VS_CPU()
 {
     Battleship game;
     game.makeEmptyBoard();
-    game.MakeBoardThree(game.board,4);
-    game.MakeBoardThree(game.playerBoard, 4);
+    game.MakeBoardThree(4);
+
 
     game.printBoard();
     std::cout << "\n\n";
     game.printPlayerBoard();
 }
-
 int letterToNumber(char letter)
 {
 	return static_cast<int>(letter) - 65;

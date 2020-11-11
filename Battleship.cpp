@@ -67,6 +67,10 @@ void Battleship::printPlayerBoard()
 	std::cout << "Ammo : " << numberOfShots << "\n";
 	//std::cout << "Remaining Ships : " << remainingShips << "\n\n";
 }
+void Battleship::printGameBoard()
+{
+
+}
 void Battleship::writeLetters()
 {
 	std::cout << "  -------------\n";
@@ -82,16 +86,23 @@ void Battleship::Shoot()
 	int xCoord = 0;
 	int yCoord = 0;
 
-	std::cout << "Where would you like to shoot Captain? \n";
+	std::cout << "Where would you like to shoot, Captain? \n";
 	std::cout << "First select a letter, then select a number. I.E : B3\n" << "FIRE ON : ";
-	std::string targetCoord;
-	std::cin >> targetCoord;
+	//std::string targetCoord;
+retry:
+	char xVal;
+	std::cin >> xVal >> yCoord;
 	
-	targetCoord[0] = toupper(targetCoord[0]);
-	xCoord = letterToNumber(targetCoord[0]);
-	//I had an issue where the char value for an int starts on 48. so therefore 
-	//i had to make sure that the y Coord was cast correctly (The reason for 49 is so that 1 = 0;
-	yCoord = targetCoord[1] - 49;
+	xCoord = letterToNumber(toupper(xVal));
+	yCoord--;
+	if (xCoord < 0 || yCoord < 0 || yCoord > M-1 || xCoord > N-1)
+	{
+		std::cin.clear();
+		std::cin.ignore(8000, '\n');
+		std::cout << "We can't shoot there! : ";
+		goto retry;
+	}
+	
 
 	numberOfShots--;
 	//Checks if what is on the coord, and that it has not already been hit.
@@ -106,20 +117,40 @@ void Battleship::Shoot()
 		playerBoard[xCoord][yCoord] = MISS;
 	}
 }
-void Battleship::MakeBoardThree(char boardarr[][N], int numberOfShips)
+void Battleship::AIShoot()
 {
+
+}
+void Battleship::MakeBoardThree( int numberOfShips)
+{
+	//Player Placement Loop
 	int x = 0;
 	do 
 	{
 		int rndCol = randomColumn();
 		int rndRow = randomRow();
 
-		if (AttemptToPlaceShip(boardarr ,rndCol, rndRow, rand() & 1))
+		if (AttemptToPlaceShip(playerShipBoard ,rndCol, rndRow, rand() & 1))
 		{
 			x++;
 		}
 	} while (x < numberOfShips);
+
+	x = 0;
+	//Computer placement loop
+	do
+	{
+		int rndCol = randomColumn();
+		int rndRow = randomRow();
+
+		if (AttemptToPlaceShip(computerBoard, rndCol, rndRow, rand() & 1))
+		{
+			x++;
+		}
+	} while (x < numberOfShips);
+
 }
+
 //int Direction determines whether to check horizontal[0] or vertical[1]. 
 bool Battleship::AttemptToPlaceShip(char boardarr[][N], int Column, int Row, int direction)
 { 
