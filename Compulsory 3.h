@@ -49,12 +49,18 @@ private:
     void StorePassword(std::string new_pw)
     {
         std::fstream file;
-        file.open(saveFileName);
-        file.clear();
+        file.open(saveFileName, std::ios::out | std::ios::trunc);
+        if (file.is_open())
+        {
+			file.clear();
+			file << new_pw;
+            file.close();
+        }
+        else
+        {
+            std::cout << "Unable to save!\n";
+        }
 
-        file << new_pw;
-
-        file.close();
     }
 
 public:
@@ -221,33 +227,22 @@ public:
         _pw = FetchPassword();
         //This if statement is just in the case where it can't find a file or it has been corrupted.
         //It just resets the password back to the default.
-        if (_pw == "")
-        {
-            _pw = "ABCDHLPONM";
-        }
     }
 };
 
 void Task1();
 void MainMenu(); // Task 2
 void Play(); //Battleships
-void TestFunction();
+void Player_VS_CPU();
 class Battleship
 {
-    int numberOfHits;
-    int CPUhits;
-    
 public:
 	char board[M][N];
     //The PlayerBoard is the board where the player see where they hit and missed and choose where the way to shoot next
 	char playerBoard[M][N];
     //The PlayerShipBoard is the board holding the position of all the players ships. This is what the AI will aim at.
     //This is where you can see where the AI has been firing.
-
     char playerShipBoard[M][N];
-
-    //This is the AI's board. this stores the location of the computers ships.
-	char computerBoard[M][N];
 
     int numberOfShots;
     int computerNumberOfShots;

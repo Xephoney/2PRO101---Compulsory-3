@@ -9,9 +9,6 @@ int main()
 {
     srand(time(NULL));
     Task1();
-    //Play();
-    //TestFunction();
-    //MainMenu();
 }
 
 void Task1()
@@ -46,7 +43,7 @@ void MainMenu()
             login.ChangePassword();
             break;
         case 50 :
-            Play();
+            Player_VS_CPU();
             break;
         case 51 : 
             std::cout << "Exiting Application. Good Bye! \n\n\n";
@@ -94,17 +91,35 @@ void Play()
     system("CLS");
     MainMenu();
 }
-
 void Player_VS_CPU()
 {
     Battleship game;
     game.makeEmptyBoard();
     game.MakeBoardThree(4);
 
+    game.printGameBoard();
 
-    game.printBoard();
-    std::cout << "\n\n";
-    game.printPlayerBoard();
+    do 
+    {
+        game.Shoot();
+        game.AIShoot();
+
+        game.printGameBoard();
+        
+        if (game.remainingShips == 0)
+        {
+            std::cout << "OH NO!! They've sunk your battleships! \n --- [ GAME OVER ] ---";
+            break;
+        }
+        else if (game.computerRemainingShips == 0)
+        {
+            std::cout << "YAY!! We sunk their battleships! \n --- [ YOU WIN ] ---\n\n";
+            break;
+        }
+    } while (true);
+    system("pause");
+    system("CLS");
+    return;
 }
 int letterToNumber(char letter)
 {

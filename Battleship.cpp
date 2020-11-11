@@ -2,6 +2,7 @@
 
 void Battleship::makeEmptyBoard()
 {
+	numberOfShots = N * M;
 	for (int y = 0; y < M; y++)
 	{
 		for (int x = 0; x < N; x++)
@@ -16,11 +17,17 @@ void Battleship::makeEmptyBoard()
 			playerBoard[x][y] = BLANK;
 		}
 	}
+	for (int y = 0; y < M; y++)
+	{
+		for (int x = 0; x < N; x++)
+		{
+			playerShipBoard[x][y] = BLANK;
+		}
+	}
 }
 void Battleship::makeBoard(int numberOfShips)
 {
 	remainingShips = 0;
-	numberOfHits = 0;
 	int x;
 	int y;
 	for (int i = 0; i < numberOfShips; i++)
@@ -52,10 +59,10 @@ void Battleship::printBoard()
 }
 void Battleship::printPlayerBoard()
 {
-	system("CLS");
+	//system("CLS");
 	for (int y = 0; y < M; y++)
 	{
-		std::cout << y + 1 << " ";
+		std::cout << "    " << y + 1 << " ";
 		for (int x = 0; x < N; x++)
 		{
 			std::cout << "|" << playerBoard[x][y];
@@ -64,17 +71,36 @@ void Battleship::printPlayerBoard()
 	}
 	writeLetters();
 
-	std::cout << "Ammo : " << numberOfShots << "\n";
+	//std::cout << "Ammo : " << numberOfShots << "\n";
 	//std::cout << "Remaining Ships : " << remainingShips << "\n\n";
 }
 void Battleship::printGameBoard()
 {
+	system("CLS");
+	std::cout << "      --[ ENEMY ]--  \n";
+	printPlayerBoard();
 
+	std::cout << "\n ---------------------- \n\n";
+	
+	std::cout << "       --[ YOU ]--  \n";
+	for (int y = 0; y < M; y++)
+	{
+		std::cout << "    " << y + 1 << " ";
+		for (int x = 0; x < N; x++)
+		{
+			std::cout << "|" << playerShipBoard[x][y];
+		}
+		std::cout << "|\n";
+	}
+	writeLetters();
+
+	std::cout <<"    Ammo : " << numberOfShots << "\n";
+	//std::cout << "Remaining Ships : " << remainingShips << "\n\n";
 }
 void Battleship::writeLetters()
 {
-	std::cout << "  -------------\n";
-	std::cout << "  ";
+	std::cout << "      -------------\n";
+	std::cout << "      ";
 		for (int i = 0; i < N; i++)
 	{
 		std::cout << "|" << (char)(65 + i);
@@ -109,8 +135,7 @@ retry:
 	if (board[xCoord][yCoord] == SHIP && playerBoard[xCoord][yCoord] != HIT)
 	{
 		playerBoard[xCoord][yCoord] = HIT;
-		remainingShips--;
-		numberOfHits++;
+		computerRemainingShips--;
 	}
 	else if (board[xCoord][yCoord] != SHIP)
 	{ 
@@ -119,11 +144,30 @@ retry:
 }
 void Battleship::AIShoot()
 {
+	retry_shot:
+	int xCoord = randomColumn();
+	int yCoord = randomRow();
 
+	computerNumberOfShots--;
+	if (playerShipBoard[xCoord][yCoord] == HIT || playerShipBoard[xCoord][yCoord] == MISS)
+	{
+		goto retry_shot;
+	}
+	else if (playerShipBoard[xCoord][yCoord] == SHIP)
+	{
+		playerShipBoard[xCoord][yCoord] = HIT;
+		remainingShips--;
+	}
+	else
+	{
+		playerShipBoard[xCoord][yCoord] = MISS;
+	}
+	
 }
 void Battleship::MakeBoardThree( int numberOfShips)
 {
 	//Player Placement Loop
+	remainingShips = 0;
 	int x = 0;
 	do 
 	{
@@ -133,9 +177,10 @@ void Battleship::MakeBoardThree( int numberOfShips)
 		if (AttemptToPlaceShip(playerShipBoard ,rndCol, rndRow, rand() & 1))
 		{
 			x++;
+			remainingShips+=3;
 		}
 	} while (x < numberOfShips);
-
+	computerRemainingShips = 0;
 	x = 0;
 	//Computer placement loop
 	do
@@ -143,9 +188,10 @@ void Battleship::MakeBoardThree( int numberOfShips)
 		int rndCol = randomColumn();
 		int rndRow = randomRow();
 
-		if (AttemptToPlaceShip(computerBoard, rndCol, rndRow, rand() & 1))
+		if (AttemptToPlaceShip(board, rndCol, rndRow, rand() & 1))
 		{
 			x++;
+			computerRemainingShips += 3;
 		}
 	} while (x < numberOfShips);
 
